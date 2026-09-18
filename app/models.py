@@ -21,6 +21,8 @@ class Profile(Base):
     cold_sensitivity = Column(String)
     climate = Column(String)
     activity_level = Column(Integer)
+    base_answers = Column(String)  # добавь
+    thermo_offset = Column(Float, default=0.0)
     user = relationship("User", back_populates="profile")
 
 

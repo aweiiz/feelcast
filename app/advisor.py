@@ -24,7 +24,6 @@ def get_advice(city: str) -> dict:
             "advice": response.content}
 
 
-result = get_advice("Amsterdam")
-print(result["advice"])
+
 
 

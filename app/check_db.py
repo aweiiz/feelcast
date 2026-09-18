@@ -1,4 +1,10 @@
 import sqlite3
-conn = sqlite3.connect('feelcast.db')
-tables = conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
-print(tables)
+from pathlib import Path
+
+DB_PATH = Path(__file__).resolve().parent.parent / "feelcast.db"
+
+conn = sqlite3.connect(DB_PATH)
+rows = conn.execute("SELECT * FROM profiles").fetchall()
+print(rows)
+
+
