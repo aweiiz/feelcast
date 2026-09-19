@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 from enum import Enum
 
@@ -35,3 +35,7 @@ class OnboardingRequest(BaseModel):
     rain_sensitivity: RainSensitivity
     gender: Optional[str] = None
 
+class CheckinRequest(BaseModel):
+    city: str
+    intensity: int = Field(..., ge=-2, le=2)  # от -2 до +2
+    comment: Optional[str] = None
