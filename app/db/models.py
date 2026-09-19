@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateT
 from sqlalchemy.orm import declarative_base, relationship
 from datetime import datetime, timezone
 from app.db.database import Base, engine
+from datetime import datetime, timezone
 
 
 class User(Base):
@@ -34,7 +35,8 @@ class Review(Base):
     temperature = Column(Float)
     feeling = Column(String)
     clothing = Column(String)
-    created_at = Column(DateTime)
+    comment = Column(String, nullable=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 
 def init_db():

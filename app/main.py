@@ -1,6 +1,8 @@
+from datetime import timezone, datetime
+
 from fastapi import FastAPI, Depends, HTTPException
 from app.api.auth import get_current_user
-from app.db.models import User, init_db, Review
+from app.db.models import User, Review
 from app.services.advisor import get_advice
 from app.services.profile import get_or_create_profile
 from app.schemas.onboarding import OnboardingRequest, CheckinRequest
@@ -10,7 +12,6 @@ import json
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 app = FastAPI()
-init_db()
 
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
@@ -72,7 +73,25 @@ async def checkin(
         user_id=user.id,
         city=data.city,
         feeling=str(data.intensity),
+        comment=data.comment,
+        created_at=datetime.now(timezone.utc)
     )
     db.add(review)
     db.commit()
     return {"status": "ok", "thermo_offset": profile.thermo_offset}
+
+
+
+@app.get("/feed")
+async def feed(city: str, db: Session = Depends(get_db)):
+    reviews = db.query(Review).filter(Review.city == city).order_by(Review.created_at.desc()).limit(20).all()
+    return [
+        {
+            "intensity": r.feeling,
+            "comment": r.comment,
+            "created_at": r.created_at
+        }
+        for r in reviews
+    ]
+
+

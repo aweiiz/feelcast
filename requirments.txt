@@ -7,3 +7,4 @@ httpx
 python-dotenv
 aiofiles
 sqlalchemy
+alembic
