@@ -57,8 +57,9 @@ async def onboarding(
 
 @app.post("/advice/{city}")
 async def advice(city: str, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+        reviews = db.query(Review).filter(Review.city == city).order_by(Review.created_at.desc()).limit(20).all()
         profile = get_or_create_profile(user.id, db)
-        return get_advice(city, profile.thermo_offset)
+        return get_advice(city, profile.thermo_offset, reviews)
 
 
 @app.post("/checkin")
