@@ -1,5 +1,5 @@
-from app.models import User
-from app.database import get_db, SessionLocal
+from app.db.models import User
+from app.db.database import get_db, SessionLocal
 from fastapi import Depends, Header
 
 

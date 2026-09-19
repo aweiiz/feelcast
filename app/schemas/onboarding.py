@@ -3,8 +3,6 @@ from typing import Optional
 from enum import Enum
 
 
-
-
 class ColdSensitivity(str, Enum):
     freezes_more = "мёрзну больше"
     normal = "нормально"

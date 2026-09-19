@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>FeelCast</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 { color: #333; }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px 0;
+            width: 100%;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌤 FeelCast</h1>
+    <input type="text" id="city" placeholder="Введи город" />
+    <button onclick="getAdvice()">Получить совет</button>
+    <div id="result"></div>
+
+    <script>
+        const deviceId = localStorage.getItem('device_id') ||
+                         'device-' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('device_id', deviceId);
+
+        async function getAdvice() {
+            const city = document.getElementById('city').value;
+            if (!city) return;
+
+            const result = document.getElementById('result');
+            result.style.display = 'block';
+            result.innerHTML = 'Загрузка...';
+
+            const response = await fetch(`/advice/${city}`, {
+                method: 'POST',
+                headers: { 'X-Device-ID': deviceId }
+            });
+            const data = await response.json();
+            result.innerHTML = `
+                <b>${data.city}</b> — ${data.temp}°C<br>
+                ${data.advice}
+            `;
+        }
+    </script>
+</body>
+</html>

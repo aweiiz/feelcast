@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime, Float
 from sqlalchemy.orm import declarative_base, relationship
 from datetime import datetime, timezone
-from app.database import Base, engine
+from app.db.database import Base, engine
 
 
 class User(Base):

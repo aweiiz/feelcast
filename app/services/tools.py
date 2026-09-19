@@ -21,14 +21,15 @@ def get_weather(city: str) -> dict:
     }
 
 
-def get_clothing_advice(feels_like: float) -> str:
-    if feels_like < 0:
+def get_clothing_advice(feels_like: float, thermo_offset: float = 0.0) -> str:
+    adjusted = feels_like + thermo_offset
+    if adjusted < 0:
         return "Очень холодно. Тёплая куртка, шапка, перчатки обязательны."
-    elif feels_like < 10:
+    elif adjusted < 10:
         return "Холодно. Куртка, свитер, закрытая обувь."
-    elif feels_like < 18:
+    elif adjusted < 18:
         return "Прохладно. Лёгкая куртка или толстовка."
-    elif feels_like < 25:
+    elif adjusted < 25:
         return "Комфортно. Футболка, джинсы."
     else:
         return "Жарко. Лёгкая одежда, не забудь воду."
