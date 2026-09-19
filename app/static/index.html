@@ -3,66 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <title>FeelCast</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        h1 { color: #333; }
-        input, button {
-            padding: 10px;
-            font-size: 16px;
-            margin: 5px 0;
-            width: 100%;
-        }
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 8px;
-        }
-        #result {
-            margin-top: 20px;
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            display: none;
-        }
-    </style>
 </head>
 <body>
-    <h1>🌤 FeelCast</h1>
-    <input type="text" id="city" placeholder="Введи город" />
+
+<!-- Экран онбординга -->
+<div id="screen-onboarding">
+    <h2>Настройка профиля</h2>
+    <label>Как ты обычно себя чувствуешь?</label><br>
+    <select id="cold_sensitivity">
+        <option value="мёрзну больше">Мёрзну больше</option>
+        <option value="нормально">Нормально</option>
+        <option value="жарко чаще">Жарко чаще</option>
+    </select><br><br>
+
+    <label>Из какого ты климата?</label><br>
+    <select id="climate">
+        <option value="тёплый">Тёплый (юг)</option>
+        <option value="умеренный">Умеренный</option>
+        <option value="холодный">Холодный (север)</option>
+    </select><br><br>
+
+    <label>Насколько ты активен?</label><br>
+    <select id="activity">
+        <option value="мало хожу">Мало хожу</option>
+        <option value="обычная ходьба">Обычная ходьба</option>
+        <option value="активно">Активно</option>
+        <option value="спорт">Спорт</option>
+    </select><br><br>
+
+    <label>Насколько критично промокнуть?</label><br>
+    <select id="rain_sensitivity">
+        <option value="не важно">Не важно</option>
+        <option value="немного важно">Немного важно</option>
+        <option value="очень важно">Очень важно</option>
+    </select><br><br>
+
+    <button onclick="submitOnboarding()">Сохранить и продолжить</button>
+</div>
+
+<!-- Экран совета -->
+<div id="screen-advice" style="display:none">
+    <h2>Что надеть?</h2>
+    <input type="text" id="city" placeholder="Введи город" /><br><br>
     <button onclick="getAdvice()">Получить совет</button>
-    <div id="result"></div>
+    <p id="advice-result"></p>
+    <br>
+    <button onclick="showScreen('screen-checkin')">Оставить отзыв</button>
+    <button onclick="showScreen('screen-feed')">Посмотреть отзывы</button>
+</div>
 
-    <script>
-        const deviceId = localStorage.getItem('device_id') ||
-                         'device-' + Math.random().toString(36).substr(2, 9);
+<!-- Экран чекина -->
+<div id="screen-checkin" style="display:none">
+    <h2>Как тебе было?</h2>
+    <input type="text" id="checkin-city" placeholder="Город" /><br><br>
+    <label>Оценка:</label><br>
+    <button onclick="submitCheckin(-2)">Очень холодно</button>
+    <button onclick="submitCheckin(-1)">Холодно</button>
+    <button onclick="submitCheckin(0)">Нормально</button>
+    <button onclick="submitCheckin(1)">Тепло</button>
+    <button onclick="submitCheckin(2)">Очень жарко</button><br><br>
+    <input type="text" id="checkin-comment" placeholder="Комментарий (необязательно)" /><br><br>
+    <button onclick="showScreen('screen-advice')">Назад</button>
+</div>
+
+<!-- Экран ленты -->
+<div id="screen-feed" style="display:none">
+    <h2>Отзывы</h2>
+    <input type="text" id="feed-city" placeholder="Город" />
+    <button onclick="loadFeed()">Загрузить</button>
+    <div id="feed-list"></div>
+    <br>
+    <button onclick="showScreen('screen-advice')">Назад</button>
+</div>
+
+<script>
+    // Device ID
+    let deviceId = localStorage.getItem('device_id');
+    if (!deviceId) {
+        deviceId = crypto.randomUUID();
         localStorage.setItem('device_id', deviceId);
+    }
 
-        async function getAdvice() {
-            const city = document.getElementById('city').value;
-            if (!city) return;
+    const headers = {
+        'Content-Type': 'application/json',
+        'X-Device-ID': deviceId
+    };
 
-            const result = document.getElementById('result');
-            result.style.display = 'block';
-            result.innerHTML = 'Загрузка...';
+    function showScreen(id) {
+        ['screen-onboarding', 'screen-advice', 'screen-checkin', 'screen-feed']
+            .forEach(s => document.getElementById(s).style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+    }
 
-            const response = await fetch(`/advice/${city}`, {
-                method: 'POST',
-                headers: { 'X-Device-ID': deviceId }
-            });
-            const data = await response.json();
-            result.innerHTML = `
-                <b>${data.city}</b> — ${data.temp}°C<br>
-                ${data.advice}
-            `;
+    // Проверяем прошёл ли онбординг
+    if (localStorage.getItem('onboarding_done')) {
+        showScreen('screen-advice');
+    }
+
+    async function submitOnboarding() {
+        const data = {
+            cold_sensitivity: document.getElementById('cold_sensitivity').value,
+            climate: document.getElementById('climate').value,
+            activity: document.getElementById('activity').value,
+            rain_sensitivity: document.getElementById('rain_sensitivity').value,
+            gender: null
+        };
+        const res = await fetch('/onboarding', {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(data)
+        });
+        if (res.ok) {
+            localStorage.setItem('onboarding_done', '1');
+            showScreen('screen-advice');
+        } else {
+            alert('Ошибка: ' + await res.text());
         }
-    </script>
+    }
+
+    async function getAdvice() {
+        const city = document.getElementById('city').value;
+        if (!city) return alert('Введи город');
+        const res = await fetch(`/advice/${city}`, { method: 'POST', headers });
+        const data = await res.json();
+        document.getElementById('advice-result').textContent = data.advice;
+        document.getElementById('checkin-city').value = city;
+        document.getElementById('feed-city').value = city;
+    }
+
+    async function submitCheckin(intensity) {
+        const city = document.getElementById('checkin-city').value;
+        const comment = document.getElementById('checkin-comment').value;
+        if (!city) return alert('Введи город');
+        const res = await fetch('/checkin', {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ city, intensity, comment: comment || null })
+        });
+        if (res.ok) {
+            alert('Отзыв сохранён!');
+            showScreen('screen-advice');
+        } else {
+            alert('Ошибка: ' + await res.text());
+        }
+    }
+
+    async function loadFeed() {
+    const city = document.getElementById('feed-city').value;
+    if (!city) return alert('Введи город');
+    const res = await fetch(`/feed?city=${city}`);
+    const data = await res.json();
+    const list = document.getElementById('feed-list');
+
+    const intensityMap = {
+        '-2': 'Очень холодно',
+        '-1': 'Холодно',
+        '0': 'Нормально',
+        '1': 'Тепло',
+        '2': 'Очень жарко'
+    };
+
+    if (data.length === 0) {
+        list.innerHTML = '<p>Отзывов пока нет</p>';
+        return;
+    }
+    list.innerHTML = data.map(r => `
+        <div>
+            <b>${intensityMap[r.intensity] || r.intensity}</b>
+            ${r.comment ? `<p>${r.comment}</p>` : ''}
+            <small>${r.created_at || ''}</small>
+            <hr>
+        </div>
+    `).join('');
+}
+</script>
+
 </body>
 </html>
