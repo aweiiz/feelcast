@@ -1,4 +1,12 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DateTime, Float
+from sqlalchemy import (
+    create_engine,
+    Column,
+    Integer,
+    String,
+    ForeignKey,
+    DateTime,
+    Float,
+)
 from sqlalchemy.orm import declarative_base, relationship
 from datetime import datetime, timezone
 from app.db.database import Base, engine
@@ -45,5 +53,3 @@ def init_db():
 
 if __name__ == "__main__":
     init_db()
-
-

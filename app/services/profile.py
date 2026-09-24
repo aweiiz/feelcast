@@ -10,4 +10,3 @@ def get_or_create_profile(user_id: int, db: Session) -> Profile:
         db.commit()
         db.refresh(profile)
     return profile
-

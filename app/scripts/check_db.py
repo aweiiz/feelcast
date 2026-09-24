@@ -6,5 +6,3 @@ DB_PATH = Path(__file__).resolve().parent.parent / "feelcast.db"
 conn = sqlite3.connect(DB_PATH)
 rows = conn.execute("SELECT * FROM reviews").fetchall()
 print(rows)
-
-

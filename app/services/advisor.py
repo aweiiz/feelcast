@@ -5,7 +5,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-llm = ChatGroq(api_key=os.getenv("GROQ_API_KEY"),model="openai/gpt-oss-20b",temperature=0.3)
+llm = ChatGroq(
+    api_key=os.getenv("GROQ_API_KEY"), model="openai/gpt-oss-20b", temperature=0.3
+)
 
 
 def get_advice(city: str, thermo_offset: float = 0.0, reviews: list = []) -> dict:
@@ -15,10 +17,12 @@ def get_advice(city: str, thermo_offset: float = 0.0, reviews: list = []) -> dic
     # Формируем блок отзывов
     reviews_block = ""
     if reviews:
-        reviews_text = "\n".join([
-            f"- оценка: {r.feeling}, комментарий: {r.comment or 'нет'}"
-            for r in reviews
-        ])
+        reviews_text = "\n".join(
+            [
+                f"- оценка: {r.feeling}, комментарий: {r.comment or 'нет'}"
+                for r in reviews
+            ]
+        )
         reviews_block = f"\nОтзывы других людей в {city} сегодня:\n{reviews_text}"
 
     my_prompt = f"""Погода в {city}: реальная температура {weather["temp"]}°C, 
@@ -34,8 +38,5 @@ def get_advice(city: str, thermo_offset: float = 0.0, reviews: list = []) -> dic
         "city": city,
         "temp": weather["feels_like"],
         "description": weather["description"],
-        "advice": response.content
+        "advice": response.content,
     }
-
-
-

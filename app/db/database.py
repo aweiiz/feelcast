@@ -2,7 +2,6 @@ from pathlib import Path
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 DB_PATH = BASE_DIR / "feelcast.db"
 
@@ -17,5 +16,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
-

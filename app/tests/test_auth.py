@@ -3,4 +3,3 @@ def test_whoami(client):
     assert response.status_code == 200
     assert response.json()["device_id"] == "test-device-123"
     assert "user_id" in response.json()
-

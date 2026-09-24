@@ -3,8 +3,6 @@ from app.db.database import get_db, SessionLocal
 from fastapi import Depends, Header
 
 
-
-
 def get_current_user(
     x_device_id: str = Header(..., alias="X-Device-ID"),
     db: SessionLocal = Depends(get_db),
@@ -16,10 +14,3 @@ def get_current_user(
         db.commit()
         db.refresh(user)
     return user
-
-
-
-
-
-
-

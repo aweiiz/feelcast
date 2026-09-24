@@ -21,11 +21,11 @@ class Activity(str, Enum):
     active = "активно"
     sport = "спорт"
 
+
 class RainSensitivity(str, Enum):
     not_important = "не важно"
     somewhat = "немного важно"
     very_important = "очень важно"
-
 
 
 class OnboardingRequest(BaseModel):
@@ -34,6 +34,7 @@ class OnboardingRequest(BaseModel):
     activity: Activity
     rain_sensitivity: RainSensitivity
     gender: Optional[str] = None
+
 
 class CheckinRequest(BaseModel):
     city: str
