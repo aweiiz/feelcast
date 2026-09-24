@@ -36,5 +36,3 @@ def get_clothing_advice(feels_like: float, thermo_offset: float = 0.0) -> str:
 #    return f'Температура ощущается как {feels_like}, поэтому рекомендуем надеть '
 
 
-
-feels_like = get_weather('London')["feels_like"]
