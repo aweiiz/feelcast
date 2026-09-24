@@ -18,3 +18,6 @@ jobs:
 
       - name: Run tests
         run: pytest -v
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
