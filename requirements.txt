@@ -10,4 +10,4 @@ sqlalchemy
 alembic
 pytest
 pytest-asyncio
-pytest httpx
+pytest
