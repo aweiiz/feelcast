@@ -1,5 +1,4 @@
 from sqlalchemy import (
-    create_engine,
     Column,
     Integer,
     String,
@@ -7,8 +6,7 @@ from sqlalchemy import (
     DateTime,
     Float,
 )
-from sqlalchemy.orm import declarative_base, relationship
-from datetime import datetime, timezone
+from sqlalchemy.orm import relationship
 from app.db.database import Base, engine
 from datetime import datetime, timezone
 

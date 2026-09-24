@@ -25,7 +25,7 @@ def get_advice(city: str, thermo_offset: float = 0.0, reviews: list = []) -> dic
         )
         reviews_block = f"\nОтзывы других людей в {city} сегодня:\n{reviews_text}"
 
-    my_prompt = f"""Погода в {city}: реальная температура {weather["temp"]}°C, 
+    my_prompt = f"""Погода в {city}: реальная температура {weather["temp"]}°C,
 ощущается как {weather["feels_like"]}°C, {weather["description"]}.
 Базовый совет: {base_advice}{reviews_block}
 

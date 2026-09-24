@@ -1,6 +1,6 @@
 from datetime import timezone, datetime
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends
 from app.api.auth import get_current_user
 from app.db.models import User, Review
 from app.services.advisor import get_advice
