@@ -2,12 +2,20 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 from app.main import app
 from app.db.database import get_db
 from app.db.models import Base
 
-# Тестовая БД в памяти
-engine = create_engine("sqlite:///:memory:")
+# Тестовая БД в памяти. StaticPool нужен, чтобы все соединения (в т.ч. из
+# threadpool-потока, где TestClient выполняет sync-эндпоинты) использовали
+# одно и то же in-memory соединение — иначе таблицы не видны за пределами
+# потока, в котором их создали.
+engine = create_engine(
+    "sqlite:///:memory:",
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
+)
 TestingSessionLocal = sessionmaker(bind=engine)
 
 
