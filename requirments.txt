@@ -8,3 +8,6 @@ python-dotenv
 aiofiles
 sqlalchemy
 alembic
+pytest
+pytest-asyncio
+pytest httpx
