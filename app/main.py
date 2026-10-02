@@ -11,10 +11,11 @@ from sqlalchemy.orm import Session
 import json
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from app.api.auth_email import router as auth_router
 
 app = FastAPI()
 
-
+app.include_router(auth_router)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 

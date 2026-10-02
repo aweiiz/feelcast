@@ -5,6 +5,7 @@ from sqlalchemy import (
     ForeignKey,
     DateTime,
     Float,
+    Boolean
 )
 from sqlalchemy.orm import relationship
 from app.db.database import Base, engine
@@ -43,6 +44,16 @@ class Review(Base):
     clothing = Column(String)
     comment = Column(String, nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+
+class EmailToken(Base):
+    __tablename__ = "email_tokens"
+    id = Column(Integer, primary_key=True)
+    email = Column(String, nullable=False)
+    code = Column(String, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    used = Column(Boolean, default=False)
+
 
 
 def init_db():
