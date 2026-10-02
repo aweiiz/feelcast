@@ -1,5 +1,8 @@
-from datetime import timezone, datetime, timedelta
 
+from dotenv import load_dotenv
+load_dotenv()
+
+from datetime import timezone, datetime, timedelta
 from fastapi import FastAPI, Depends
 from app.api.auth import get_current_user
 from app.db.models import User, Review
@@ -8,10 +11,15 @@ from app.services.profile import get_or_create_profile
 from app.schemas.onboarding import OnboardingRequest, CheckinRequest
 from app.db.database import get_db
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 import json
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from app.api.auth_email import router as auth_router
+
+
+
+
 
 app = FastAPI()
 
@@ -108,3 +116,37 @@ async def feed(city: str, db: Session = Depends(get_db)):
         {"intensity": r.feeling, "comment": r.comment, "created_at": str(r.created_at)}
         for r in reviews
     ]
+
+
+@app.get("/me")
+async def get_me(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    profile = get_or_create_profile(user.id, db)
+    answers = json.loads(profile.base_answers) if profile.base_answers else {}
+    checkin_count = db.query(Review).filter(Review.user_id == user.id).count()
+    top_cities = (
+        db.query(Review.city, func.count(Review.city).label("cnt"))
+        .filter(Review.user_id == user.id)
+        .group_by(Review.city)
+        .order_by(func.count(Review.city).desc())
+        .limit(3)
+        .all()
+    )
+    return {
+        "email": user.email,
+        "nickname": user.nickname,
+        "thermo_offset": profile.thermo_offset,
+        "answers": answers,
+        "checkin_count": checkin_count,
+        "top_cities": [{"city": c, "count": n} for c, n in top_cities],
+    }
+
+@app.patch("/me")
+async def update_me(
+    data: dict,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    if "nickname" in data:
+        user.nickname = data["nickname"]
+    db.commit()
+    return {"status": "ok"}

@@ -12,5 +12,5 @@ pytest
 pytest-asyncio
 pytest
 black
-cryptography
-
+python-jose[cryptography]
+python-dotenv

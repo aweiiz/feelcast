@@ -1,418 +1,421 @@
-
-
-Index · HTML
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FeelCast</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background: #0f0f0f;
-            color: #e0e0e0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 24px 16px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 480px;
-        }
-
-        .logo {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: #fff;
-            margin-bottom: 28px;
-            text-align: center;
-        }
-
-        .logo span {
-            color: #5b9cf6;
-        }
-
-        .card {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 16px;
-            padding: 24px;
-        }
-
-        .card h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 20px;
-        }
-
-        .field {
-            margin-bottom: 16px;
-        }
-
-        .field label {
-            display: block;
-            font-size: 13px;
-            color: #888;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-
-        select, input[type="text"] {
-            width: 100%;
-            background: #111;
-            border: 1px solid #2a2a2a;
-            border-radius: 10px;
-            color: #e0e0e0;
-            font-size: 15px;
-            padding: 11px 14px;
-            outline: none;
-            transition: border-color 0.2s;
-            -webkit-appearance: none;
-        }
-
-        select:focus, input[type="text"]:focus {
-            border-color: #5b9cf6;
-        }
-
-        select option {
-            background: #1a1a1a;
-        }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 13px;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.15s, transform 0.1s;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-primary {
-            background: #5b9cf6;
-            color: #fff;
-        }
-
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
-
-        .btn-secondary {
-            background: #222;
-            color: #ccc;
-            border: 1px solid #2a2a2a;
-            margin-top: 10px;
-        }
-
-        .btn-secondary:hover {
-            background: #2a2a2a;
-        }
-
-        .advice-box {
-            background: #111;
-            border: 1px solid #2a2a2a;
-            border-radius: 10px;
-            padding: 14px;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #ccc;
-            margin: 16px 0;
-            min-height: 48px;
-        }
-
-        .intensity-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .intensity-btn {
-            padding: 10px 4px;
-            border: 1px solid #2a2a2a;
-            border-radius: 10px;
-            background: #111;
-            color: #ccc;
-            font-size: 11px;
-            text-align: center;
-            cursor: pointer;
-            transition: background 0.15s, border-color 0.15s;
-            line-height: 1.3;
-        }
-
-        .intensity-btn:hover {
-            background: #222;
-            border-color: #5b9cf6;
-            color: #fff;
-        }
-
-        .intensity-btn.cold { --accent: #60a5fa; }
-        .intensity-btn.ok   { --accent: #34d399; }
-        .intensity-btn.hot  { --accent: #f87171; }
-
-        .intensity-btn:hover { border-color: var(--accent, #5b9cf6); }
-
-        .feed-item {
-            background: #111;
-            border: 1px solid #2a2a2a;
-            border-radius: 10px;
-            padding: 14px;
-            margin-bottom: 10px;
-        }
-
-        .feed-item .badge {
-            display: inline-block;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 20px;
-            margin-bottom: 6px;
-        }
-
-        .badge-cold { background: #1e3a5f; color: #60a5fa; }
-        .badge-ok   { background: #14422f; color: #34d399; }
-        .badge-hot  { background: #3b1d1d; color: #f87171; }
-
-        .feed-item .comment {
-            font-size: 14px;
-            color: #aaa;
-            margin: 4px 0;
-        }
-
-        .feed-item .ts {
-            font-size: 12px;
-            color: #555;
-        }
-
-        .empty-state {
-            text-align: center;
-            color: #555;
-            font-size: 14px;
-            padding: 20px 0;
-        }
-
-        .divider {
-            height: 1px;
-            background: #2a2a2a;
-            margin: 16px 0;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-<div class="container">
-    <div class="logo">Feel<span>Cast</span></div>
 
-    <!-- Онбординг -->
-    <div id="screen-onboarding" class="card">
-        <h2>Настройка профиля</h2>
+<!-- ── ВЕРХНЯЯ НАВИГАЦИЯ ── -->
+<nav class="topnav" id="topnav" style="display:none">
+    <div class="nav-logo" onclick="showPage('page-advice')">FeelCast</div>
+    <div class="nav-links">
+        <button class="nav-link" data-page="page-advice" onclick="showPage('page-advice')">Совет</button>
+        <button class="nav-link" data-page="page-checkin" onclick="showPage('page-checkin')">Чекин</button>
+        <button class="nav-link" data-page="page-feed" onclick="showPage('page-feed')">Лента</button>
+        <button class="nav-link" data-page="page-profile" onclick="showPage('page-profile')">Профиль</button>
+    </div>
+</nav>
 
-        <div class="field">
-            <label>Как ты обычно себя чувствуешь?</label>
-            <select id="cold_sensitivity">
-                <option value="мёрзну больше">Мёрзну больше</option>
-                <option value="нормально">Нормально</option>
-                <option value="жарко чаще">Жарко чаще</option>
-            </select>
+<!-- ── НИЖНЯЯ НАВИГАЦИЯ (мобиле) ── -->
+<nav class="bottom-nav" id="bottom-nav" style="display:none">
+    <div class="bottom-nav-inner">
+        <button class="bottom-nav-item" data-page="page-advice" onclick="showPage('page-advice')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            Совет
+        </button>
+        <button class="bottom-nav-item" data-page="page-checkin" onclick="showPage('page-checkin')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Чекин
+        </button>
+        <button class="bottom-nav-item" data-page="page-feed" onclick="showPage('page-feed')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            Лента
+        </button>
+        <button class="bottom-nav-item" data-page="page-profile" onclick="showPage('page-profile')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Профиль
+        </button>
+    </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     СТРАНИЦА: ЛОГИН
+══════════════════════════════════════════ -->
+<div id="page-login" class="page active">
+    <div class="login-page">
+        <div class="login-logo">FeelCast</div>
+        <div class="login-tagline">Что надеть сегодня — узнай за секунду</div>
+        <div class="login-card">
+            <h2>Войти</h2>
+            <div class="field">
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="you@example.com" />
+            </div>
+            <button class="btn btn-dark" onclick="requestCode()">Получить код →</button>
+            <button class="btn btn-ghost" onclick="continueAsGuest()">Продолжить без входа</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     СТРАНИЦА: ВЕРИФИКАЦИЯ
+══════════════════════════════════════════ -->
+<div id="page-verify" class="page">
+    <div class="login-page">
+        <div class="login-logo">FeelCast</div>
+        <div class="login-card">
+            <h2>Введи код</h2>
+            <p class="subtitle">Отправили 6-значный код на <span id="verify-email-label"></span></p>
+            <div class="debug-box" id="debug-code-box" style="display:none">
+                🛠 Код для разработки: <b id="debug-code"></b>
+            </div>
+            <div class="field">
+                <label>Код из письма</label>
+                <input type="text" id="verify-code" placeholder="123456" maxlength="6" inputmode="numeric" />
+            </div>
+            <button class="btn btn-dark" onclick="verifyCode()">Войти →</button>
+            <button class="btn btn-ghost" onclick="showPage('page-login')">← Назад</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     СТРАНИЦА: ОНБОРДИНГ
+══════════════════════════════════════════ -->
+<div id="page-onboarding" class="page">
+    <div class="page-inner">
+
+        <div class="progress-bar" id="ob-progress">
+            <div class="progress-seg done"></div>
+            <div class="progress-seg done"></div>
+            <div class="progress-seg"></div>
+            <div class="progress-seg"></div>
+            <div class="progress-seg"></div>
+        </div>
+        <div class="progress-label" id="ob-step-label">Вопрос 1 из 4</div>
+
+        <!-- Шаг 1 -->
+        <div id="ob-step-1">
+            <h1>Как ты обычно переносишь холод?</h1>
+            <p class="subtitle">Это поможет точнее подбирать советы под тебя лично</p>
+            <div class="option-list">
+                <button class="option-btn" onclick="selectOption(this, 'cold_sensitivity', 'мёрзну больше')">
+                    <span class="option-label">Мёрзну быстрее большинства людей</span>
+                    <span class="option-radio"></span>
+                </button>
+                <button class="option-btn" onclick="selectOption(this, 'cold_sensitivity', 'нормально')">
+                    <span class="option-label">Переношу холод как все</span>
+                    <span class="option-radio"></span>
+                </button>
+                <button class="option-btn" onclick="selectOption(this, 'cold_sensitivity', 'жарко чаще')">
+                    <span class="option-label">Почти не мёрзну</span>
+                    <span class="option-radio"></span>
+                </button>
+            </div>
+            <button class="btn btn-dark" onclick="obNext(1)">Далее</button>
         </div>
 
+        <!-- Шаг 2 -->
+        <div id="ob-step-2" style="display:none">
+            <h1>Откуда ты родом?</h1>
+            <p class="subtitle">Привычка к климату влияет на восприятие температуры</p>
+            <div class="option-list">
+                <button class="option-btn" onclick="selectOption(this, 'climate', 'тёплый')">
+                    <span class="option-label">Тёплый (юг)</span>
+                    <span class="option-radio"></span>
+                </button>
+                <button class="option-btn" onclick="selectOption(this, 'climate', 'умеренный')">
+                    <span class="option-label">Умеренный</span>
+                    <span class="option-radio"></span>
+                </button>
+                <button class="option-btn" onclick="selectOption(this, 'climate', 'холодный')">
+                    <span class="option-label">Холодный (север)</span>
+                    <span class="option-radio"></span>
+                </button>
+            </div>
+            <button class="btn btn-dark" onclick="obNext(2)">Далее</button>
+        </div>
+
+        <!-- Шаг 3 -->
+        <div id="ob-step-3" style="display:none">
+            <h1>Насколько ты активен?</h1>
+            <p class="subtitle">Физическая активность влияет на ощущение тепла</p>
+            <div class="option-list">
+                <button class="option-btn" onclick="selectOption(this, 'activity', 'мало хожу')">
+                    <span class="option-label">Мало хожу</span>
+                    <span class="option-radio"></span>
+                </button>
+                <button class="option-btn" onclick="selectOption(this, 'activity', 'обычная ходьба')">
+                    <span class="option-label">Обычная ходьба</span>
+                    <span class="option-radio"></span>
+                </button>
+                <button class="option-btn" onclick="selectOption(this, 'activity', 'активно')">
+                    <span class="option-label">Активно</span>
+                    <span class="option-radio"></span>
+                </button>
+                <button class="option-btn" onclick="selectOption(this, 'activity', 'спорт')">
+                    <span class="option-label">Занимаюсь спортом</span>
+                    <span class="option-radio"></span>
+                </button>
+            </div>
+            <button class="btn btn-dark" onclick="obNext(3)">Далее</button>
+        </div>
+
+        <!-- Шаг 4 -->
+        <div id="ob-step-4" style="display:none">
+            <h1>Насколько критично промокнуть?</h1>
+            <p class="subtitle">Если важно оставаться сухим — учтём это в совете</p>
+            <div class="option-list">
+                <button class="option-btn" onclick="selectOption(this, 'rain_sensitivity', 'не важно')">
+                    <span class="option-label">Не важно</span>
+                    <span class="option-radio"></span>
+                </button>
+                <button class="option-btn" onclick="selectOption(this, 'rain_sensitivity', 'немного важно')">
+                    <span class="option-label">Немного важно</span>
+                    <span class="option-radio"></span>
+                </button>
+                <button class="option-btn" onclick="selectOption(this, 'rain_sensitivity', 'очень важно')">
+                    <span class="option-label">Очень важно</span>
+                    <span class="option-radio"></span>
+                </button>
+            </div>
+            <button class="btn btn-dark" onclick="obFinish()">Сохранить и продолжить</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     СТРАНИЦА: СОВЕТ
+══════════════════════════════════════════ -->
+<div id="page-advice" class="page">
+    <div class="page-inner wide">
+
+        <div class="city-row">
+            <div class="date" id="advice-date"></div>
+        </div>
+
+        <!-- Поиск города -->
+        <div id="advice-search" style="margin-bottom:32px">
+            <div class="city-input-row">
+                <input type="text" id="city" placeholder="Введи город, например Москва" />
+                <button class="btn btn-dark btn-sm" onclick="getAdvice()">Получить совет</button>
+            </div>
+        </div>
+
+        <!-- Результат совета -->
+        <div id="advice-result" style="display:none">
+            <div class="advice-layout">
+                <div class="advice-left">
+                    <div class="city-row">
+                        <div class="city-name" id="advice-city-name" style="font-size:17px;font-weight:600"></div>
+                    </div>
+                    <div class="temp-block">
+                        <div class="temp-big" id="advice-temp">+4°</div>
+                        <div class="temp-feels" id="advice-feels">ощущается как −1°</div>
+                        <div class="temp-divider"></div>
+                    </div>
+                    <div class="advice-text" id="advice-main-text"></div>
+                    <div class="advice-profile-note" id="advice-profile-note"></div>
+                    <div class="weather-cards">
+                        <div class="weather-card">
+                            <div class="wc-icon">💨</div>
+                            <div class="wc-value" id="wc-wind">—</div>
+                            <div class="wc-label">ветер</div>
+                        </div>
+                        <div class="weather-card">
+                            <div class="wc-icon">🌧</div>
+                            <div class="wc-value" id="wc-rain">—</div>
+                            <div class="wc-label">осадки</div>
+                        </div>
+                        <div class="weather-card">
+                            <div class="wc-icon">💧</div>
+                            <div class="wc-value" id="wc-humidity">—</div>
+                            <div class="wc-label">влажность</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="advice-right">
+                    <div class="nearby-card" id="nearby-card" style="display:none">
+                        <div class="nc-eyebrow">
+                            РЯДОМ СЕЙЧАС
+                            <div class="nearby-avatars">
+                                <div class="nearby-avatar"></div>
+                                <div class="nearby-avatar"></div>
+                                <div class="nearby-avatar"></div>
+                            </div>
+                        </div>
+                        <div class="nc-text" id="nearby-text"></div>
+                        <button class="nc-link" onclick="showPage('page-feed')">Смотреть ленту →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Заглушка до первого запроса -->
+        <div id="advice-empty" class="advice-placeholder">
+            Введи город выше — получишь персональный совет что надеть
+        </div>
+
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     СТРАНИЦА: ЧЕКИН
+══════════════════════════════════════════ -->
+<div id="page-checkin" class="page">
+    <div class="page-inner">
+        <div class="eyebrow" id="checkin-eyebrow">ЧЕКИН</div>
+        <h1>Как тебе было сегодня на улице?</h1>
+
+        <div class="field" style="margin-top:24px">
+            <label>Город</label>
+            <input type="text" id="checkin-city" placeholder="Например, Москва" />
+        </div>
+
+        <div class="option-list" style="margin-top:8px">
+            <button class="option-btn" onclick="selectCheckin(this, -2)">
+                <span class="option-icon">❄</span>
+                <span class="option-label">Очень холодно</span>
+                <span class="option-radio"></span>
+            </button>
+            <button class="option-btn" onclick="selectCheckin(this, -1)">
+                <span class="option-icon" style="font-size:14px">◑</span>
+                <span class="option-label">Прохладно</span>
+                <span class="option-radio"></span>
+            </button>
+            <button class="option-btn" onclick="selectCheckin(this, 0)">
+                <span class="option-icon" style="font-size:12px">○</span>
+                <span class="option-label">В самый раз</span>
+                <span class="option-radio"></span>
+            </button>
+            <button class="option-btn" onclick="selectCheckin(this, 1)">
+                <span class="option-icon" style="font-size:14px">◑</span>
+                <span class="option-label">Тепло</span>
+                <span class="option-radio"></span>
+            </button>
+            <button class="option-btn" onclick="selectCheckin(this, 2)">
+                <span class="option-icon">☀</span>
+                <span class="option-label">Очень жарко</span>
+                <span class="option-radio"></span>
+            </button>
+        </div>
+
+        <div class="field" style="margin-top:4px">
+            <label>Комментарий (необязательно)</label>
+            <textarea id="checkin-comment" placeholder="Например: сильно дуло у метро"></textarea>
+        </div>
+
+        <div class="anon-note">Твой ответ также попадёт в ленту района — анонимно</div>
+        <button class="btn btn-primary" onclick="submitCheckin()">Отправить</button>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     СТРАНИЦА: ЛЕНТА
+══════════════════════════════════════════ -->
+<div id="page-feed" class="page">
+    <div class="page-inner wide">
+        <div class="feed-header">
+            <div class="eyebrow">ЛЕНТА</div>
+            <h1>Что говорят рядом</h1>
+        </div>
+        <div class="feed-city-row">
+            <input type="text" id="feed-city" placeholder="Город" style="max-width:300px" />
+            <button class="btn btn-dark btn-sm" onclick="loadFeed()">Загрузить</button>
+        </div>
+        <div class="feed-grid" id="feed-list">
+            <div class="feed-empty">Введи город и нажми «Загрузить»</div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     СТРАНИЦА: ПРОФИЛЬ
+══════════════════════════════════════════ -->
+<div id="page-profile" class="page">
+    <div class="page-inner">
+        <div class="profile-header-block">
+            <div class="profile-avatar-big" id="profile-avatar">?</div>
+            <div>
+                <div class="profile-name-big" id="profile-name">—</div>
+                <div class="profile-email-small" id="profile-email">—</div>
+            </div>
+        </div>
+
+        <div class="section-label">Имя</div>
+        <div style="display:flex;gap:10px;margin-bottom:8px">
+            <input type="text" id="profile-nickname-input" placeholder="Твоё имя или никнейм" />
+            <button class="btn btn-dark btn-sm" onclick="saveNickname()" style="white-space:nowrap">Сохранить</button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-label">Статистика</div>
+        <div class="stat-row">
+            <div class="stat-card">
+                <div class="stat-num" id="stat-checkins">—</div>
+                <div class="stat-lbl">чекинов</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-num" id="stat-cities">—</div>
+                <div class="stat-lbl">городов</div>
+            </div>
+        </div>
+
+        <div class="section-label">Топ городов</div>
+        <div class="city-list-profile" id="profile-cities">
+            <div style="color:#9e9790;font-size:14px;padding:12px 0">Пока нет чекинов</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-label">Термочувствительность</div>
         <div class="field">
-            <label>Из какого ты климата?</label>
-            <select id="climate">
+            <label>Как переносишь холод</label>
+            <select id="profile-cold_sensitivity">
+                <option value="мёрзну больше">Мёрзну быстрее большинства</option>
+                <option value="нормально">Переношу как все</option>
+                <option value="жарко чаще">Почти не мёрзну</option>
+            </select>
+        </div>
+        <div class="field">
+            <label>Климат</label>
+            <select id="profile-climate">
                 <option value="тёплый">Тёплый (юг)</option>
                 <option value="умеренный">Умеренный</option>
                 <option value="холодный">Холодный (север)</option>
             </select>
         </div>
-
         <div class="field">
-            <label>Насколько ты активен?</label>
-            <select id="activity">
+            <label>Активность</label>
+            <select id="profile-activity">
                 <option value="мало хожу">Мало хожу</option>
                 <option value="обычная ходьба">Обычная ходьба</option>
                 <option value="активно">Активно</option>
                 <option value="спорт">Спорт</option>
             </select>
         </div>
-
         <div class="field">
-            <label>Насколько критично промокнуть?</label>
-            <select id="rain_sensitivity">
+            <label>Важно не промокнуть</label>
+            <select id="profile-rain_sensitivity">
                 <option value="не важно">Не важно</option>
                 <option value="немного важно">Немного важно</option>
                 <option value="очень важно">Очень важно</option>
             </select>
         </div>
-
-        <button class="btn btn-primary" onclick="submitOnboarding()">Сохранить и продолжить</button>
-    </div>
-
-    <!-- Совет -->
-    <div id="screen-advice" class="card" style="display:none">
-        <h2>Что надеть?</h2>
-        <div class="field">
-            <label>Город</label>
-            <input type="text" id="city" placeholder="Например, Москва" />
-        </div>
-        <button class="btn btn-primary" onclick="getAdvice()">Получить совет</button>
-        <div class="advice-box" id="advice-result" style="display:none"></div>
+        <button class="btn btn-dark" onclick="saveProfileSettings()">Сохранить настройки</button>
         <div class="divider"></div>
-        <button class="btn btn-secondary" onclick="showScreen('screen-checkin')">Оставить отзыв</button>
-        <button class="btn btn-secondary" onclick="showScreen('screen-feed')">Посмотреть отзывы</button>
-    </div>
-
-    <!-- Чекин -->
-    <div id="screen-checkin" class="card" style="display:none">
-        <h2>Как тебе было?</h2>
-        <div class="field">
-            <label>Город</label>
-            <input type="text" id="checkin-city" placeholder="Например, Москва" />
-        </div>
-        <label class="field" style="display:block; margin-bottom:10px; font-size:13px; color:#888;">Ощущения</label>
-        <div class="intensity-grid">
-            <button class="intensity-btn cold" onclick="submitCheckin(-2)">🥶<br>Очень холодно</button>
-            <button class="intensity-btn cold" onclick="submitCheckin(-1)">❄️<br>Холодно</button>
-            <button class="intensity-btn ok"   onclick="submitCheckin(0)">😊<br>Нормально</button>
-            <button class="intensity-btn hot"  onclick="submitCheckin(1)">☀️<br>Тепло</button>
-            <button class="intensity-btn hot"  onclick="submitCheckin(2)">🔥<br>Очень жарко</button>
-        </div>
-        <div class="field">
-            <label>Комментарий (необязательно)</label>
-            <input type="text" id="checkin-comment" placeholder="Что надел, как ощущалось..." />
-        </div>
-        <button class="btn btn-secondary" onclick="showScreen('screen-advice')">← Назад</button>
-    </div>
-
-    <!-- Лента -->
-    <div id="screen-feed" class="card" style="display:none">
-        <h2>Отзывы</h2>
-        <div class="field">
-            <input type="text" id="feed-city" placeholder="Город" />
-        </div>
-        <button class="btn btn-primary" onclick="loadFeed()">Загрузить</button>
-        <div id="feed-list" style="margin-top:16px"></div>
-        <button class="btn btn-secondary" onclick="showScreen('screen-advice')">← Назад</button>
+        <button class="btn btn-danger" onclick="logout()">Выйти из аккаунта</button>
     </div>
 </div>
 
-<script>
-    let deviceId = localStorage.getItem('device_id');
-    if (!deviceId) {
-        deviceId = crypto.randomUUID();
-        localStorage.setItem('device_id', deviceId);
-    }
-
-    const headers = {
-        'Content-Type': 'application/json',
-        'X-Device-ID': deviceId
-    };
-
-    function showScreen(id) {
-        ['screen-onboarding', 'screen-advice', 'screen-checkin', 'screen-feed']
-            .forEach(s => document.getElementById(s).style.display = 'none');
-        document.getElementById(id).style.display = 'block';
-    }
-
-    if (localStorage.getItem('onboarding_done')) {
-        showScreen('screen-advice');
-    }
-
-    async function submitOnboarding() {
-        const data = {
-            cold_sensitivity: document.getElementById('cold_sensitivity').value,
-            climate: document.getElementById('climate').value,
-            activity: document.getElementById('activity').value,
-            rain_sensitivity: document.getElementById('rain_sensitivity').value,
-            gender: null
-        };
-        const res = await fetch('/onboarding', { method: 'POST', headers, body: JSON.stringify(data) });
-        if (res.ok) {
-            localStorage.setItem('onboarding_done', '1');
-            showScreen('screen-advice');
-        } else {
-            alert('Ошибка: ' + await res.text());
-        }
-    }
-
-    async function getAdvice() {
-        const city = document.getElementById('city').value;
-        if (!city) return alert('Введи город');
-        const box = document.getElementById('advice-result');
-        box.style.display = 'block';
-        box.textContent = 'Загружаю...';
-        const res = await fetch(`/advice/${city}`, { method: 'POST', headers });
-        const data = await res.json();
-        box.textContent = data.advice;
-        document.getElementById('checkin-city').value = city;
-        document.getElementById('feed-city').value = city;
-    }
-
-    async function submitCheckin(intensity) {
-        const city = document.getElementById('checkin-city').value;
-        const comment = document.getElementById('checkin-comment').value;
-        if (!city) return alert('Введи город');
-        const res = await fetch('/checkin', {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({ city, intensity, comment: comment || null })
-        });
-        if (res.ok) {
-            alert('Отзыв сохранён!');
-            showScreen('screen-advice');
-        } else {
-            alert('Ошибка: ' + await res.text());
-        }
-    }
-
-    async function loadFeed() {
-        const city = document.getElementById('feed-city').value;
-        if (!city) return alert('Введи город');
-        const res = await fetch(`/feed?city=${city}`);
-        const data = await res.json();
-        const list = document.getElementById('feed-list');
-
-        const labels = {
-            '-2': ['🥶 Очень холодно', 'badge-cold'],
-            '-1': ['❄️ Холодно', 'badge-cold'],
-            '0':  ['😊 Нормально', 'badge-ok'],
-            '1':  ['☀️ Тепло', 'badge-hot'],
-            '2':  ['🔥 Очень жарко', 'badge-hot'],
-        };
-
-        if (!data.length) {
-            list.innerHTML = '<div class="empty-state">Отзывов пока нет</div>';
-            return;
-        }
-
-        list.innerHTML = data.map(r => {
-            const [label, cls] = labels[String(r.intensity)] || [r.intensity, 'badge-ok'];
-            return `
-                <div class="feed-item">
-                    <span class="badge ${cls}">${label}</span>
-                    ${r.comment ? `<div class="comment">${r.comment}</div>` : ''}
-                    <div class="ts">${r.created_at || ''}</div>
-                </div>
-            `;
-        }).join('');
-    }
-</script>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/auth.js"></script>
+<script src="/static/js/profile.js"></script>
+<script src="/static/js/screens.js"></script>
 </body>
 </html>
-
