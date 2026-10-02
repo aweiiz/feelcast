@@ -1,4 +1,4 @@
-from datetime import timezone, datetime
+from datetime import timezone, datetime, timedelta
 
 from fastapi import FastAPI, Depends
 from app.api.auth import get_current_user
@@ -95,14 +95,15 @@ async def checkin(
 
 @app.get("/feed")
 async def feed(city: str, db: Session = Depends(get_db)):
+    three_hours_ago = datetime.now(timezone.utc) - timedelta(hours=3)
     reviews = (
         db.query(Review)
-        .filter(Review.city == city)
+        .filter(Review.city == city, Review.created_at >= three_hours_ago)
         .order_by(Review.created_at.desc())
         .limit(20)
         .all()
     )
     return [
-        {"intensity": r.feeling, "comment": r.comment, "created_at": r.created_at}
+        {"intensity": r.feeling, "comment": r.comment, "created_at": str(r.created_at)}
         for r in reviews
     ]

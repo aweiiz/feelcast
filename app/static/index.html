@@ -1,83 +1,318 @@
+
+
+Index · HTML
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FeelCast</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #0f0f0f;
+            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px 16px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #fff;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+
+        .logo span {
+            color: #5b9cf6;
+        }
+
+        .card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            background: #111;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            color: #e0e0e0;
+            font-size: 15px;
+            padding: 11px 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            -webkit-appearance: none;
+        }
+
+        select:focus, input[type="text"]:focus {
+            border-color: #5b9cf6;
+        }
+
+        select option {
+            background: #1a1a1a;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.15s, transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: #5b9cf6;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background: #222;
+            color: #ccc;
+            border: 1px solid #2a2a2a;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #2a2a2a;
+        }
+
+        .advice-box {
+            background: #111;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ccc;
+            margin: 16px 0;
+            min-height: 48px;
+        }
+
+        .intensity-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .intensity-btn {
+            padding: 10px 4px;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            background: #111;
+            color: #ccc;
+            font-size: 11px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+            line-height: 1.3;
+        }
+
+        .intensity-btn:hover {
+            background: #222;
+            border-color: #5b9cf6;
+            color: #fff;
+        }
+
+        .intensity-btn.cold { --accent: #60a5fa; }
+        .intensity-btn.ok   { --accent: #34d399; }
+        .intensity-btn.hot  { --accent: #f87171; }
+
+        .intensity-btn:hover { border-color: var(--accent, #5b9cf6); }
+
+        .feed-item {
+            background: #111;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+
+        .feed-item .badge {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 6px;
+        }
+
+        .badge-cold { background: #1e3a5f; color: #60a5fa; }
+        .badge-ok   { background: #14422f; color: #34d399; }
+        .badge-hot  { background: #3b1d1d; color: #f87171; }
+
+        .feed-item .comment {
+            font-size: 14px;
+            color: #aaa;
+            margin: 4px 0;
+        }
+
+        .feed-item .ts {
+            font-size: 12px;
+            color: #555;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+            padding: 20px 0;
+        }
+
+        .divider {
+            height: 1px;
+            background: #2a2a2a;
+            margin: 16px 0;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <div class="logo">Feel<span>Cast</span></div>
 
-<!-- Экран онбординга -->
-<div id="screen-onboarding">
-    <h2>Настройка профиля</h2>
-    <label>Как ты обычно себя чувствуешь?</label><br>
-    <select id="cold_sensitivity">
-        <option value="мёрзну больше">Мёрзну больше</option>
-        <option value="нормально">Нормально</option>
-        <option value="жарко чаще">Жарко чаще</option>
-    </select><br><br>
+    <!-- Онбординг -->
+    <div id="screen-onboarding" class="card">
+        <h2>Настройка профиля</h2>
 
-    <label>Из какого ты климата?</label><br>
-    <select id="climate">
-        <option value="тёплый">Тёплый (юг)</option>
-        <option value="умеренный">Умеренный</option>
-        <option value="холодный">Холодный (север)</option>
-    </select><br><br>
+        <div class="field">
+            <label>Как ты обычно себя чувствуешь?</label>
+            <select id="cold_sensitivity">
+                <option value="мёрзну больше">Мёрзну больше</option>
+                <option value="нормально">Нормально</option>
+                <option value="жарко чаще">Жарко чаще</option>
+            </select>
+        </div>
 
-    <label>Насколько ты активен?</label><br>
-    <select id="activity">
-        <option value="мало хожу">Мало хожу</option>
-        <option value="обычная ходьба">Обычная ходьба</option>
-        <option value="активно">Активно</option>
-        <option value="спорт">Спорт</option>
-    </select><br><br>
+        <div class="field">
+            <label>Из какого ты климата?</label>
+            <select id="climate">
+                <option value="тёплый">Тёплый (юг)</option>
+                <option value="умеренный">Умеренный</option>
+                <option value="холодный">Холодный (север)</option>
+            </select>
+        </div>
 
-    <label>Насколько критично промокнуть?</label><br>
-    <select id="rain_sensitivity">
-        <option value="не важно">Не важно</option>
-        <option value="немного важно">Немного важно</option>
-        <option value="очень важно">Очень важно</option>
-    </select><br><br>
+        <div class="field">
+            <label>Насколько ты активен?</label>
+            <select id="activity">
+                <option value="мало хожу">Мало хожу</option>
+                <option value="обычная ходьба">Обычная ходьба</option>
+                <option value="активно">Активно</option>
+                <option value="спорт">Спорт</option>
+            </select>
+        </div>
 
-    <button onclick="submitOnboarding()">Сохранить и продолжить</button>
-</div>
+        <div class="field">
+            <label>Насколько критично промокнуть?</label>
+            <select id="rain_sensitivity">
+                <option value="не важно">Не важно</option>
+                <option value="немного важно">Немного важно</option>
+                <option value="очень важно">Очень важно</option>
+            </select>
+        </div>
 
-<!-- Экран совета -->
-<div id="screen-advice" style="display:none">
-    <h2>Что надеть?</h2>
-    <input type="text" id="city" placeholder="Введи город" /><br><br>
-    <button onclick="getAdvice()">Получить совет</button>
-    <p id="advice-result"></p>
-    <br>
-    <button onclick="showScreen('screen-checkin')">Оставить отзыв</button>
-    <button onclick="showScreen('screen-feed')">Посмотреть отзывы</button>
-</div>
+        <button class="btn btn-primary" onclick="submitOnboarding()">Сохранить и продолжить</button>
+    </div>
 
-<!-- Экран чекина -->
-<div id="screen-checkin" style="display:none">
-    <h2>Как тебе было?</h2>
-    <input type="text" id="checkin-city" placeholder="Город" /><br><br>
-    <label>Оценка:</label><br>
-    <button onclick="submitCheckin(-2)">Очень холодно</button>
-    <button onclick="submitCheckin(-1)">Холодно</button>
-    <button onclick="submitCheckin(0)">Нормально</button>
-    <button onclick="submitCheckin(1)">Тепло</button>
-    <button onclick="submitCheckin(2)">Очень жарко</button><br><br>
-    <input type="text" id="checkin-comment" placeholder="Комментарий (необязательно)" /><br><br>
-    <button onclick="showScreen('screen-advice')">Назад</button>
-</div>
+    <!-- Совет -->
+    <div id="screen-advice" class="card" style="display:none">
+        <h2>Что надеть?</h2>
+        <div class="field">
+            <label>Город</label>
+            <input type="text" id="city" placeholder="Например, Москва" />
+        </div>
+        <button class="btn btn-primary" onclick="getAdvice()">Получить совет</button>
+        <div class="advice-box" id="advice-result" style="display:none"></div>
+        <div class="divider"></div>
+        <button class="btn btn-secondary" onclick="showScreen('screen-checkin')">Оставить отзыв</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-feed')">Посмотреть отзывы</button>
+    </div>
 
-<!-- Экран ленты -->
-<div id="screen-feed" style="display:none">
-    <h2>Отзывы</h2>
-    <input type="text" id="feed-city" placeholder="Город" />
-    <button onclick="loadFeed()">Загрузить</button>
-    <div id="feed-list"></div>
-    <br>
-    <button onclick="showScreen('screen-advice')">Назад</button>
+    <!-- Чекин -->
+    <div id="screen-checkin" class="card" style="display:none">
+        <h2>Как тебе было?</h2>
+        <div class="field">
+            <label>Город</label>
+            <input type="text" id="checkin-city" placeholder="Например, Москва" />
+        </div>
+        <label class="field" style="display:block; margin-bottom:10px; font-size:13px; color:#888;">Ощущения</label>
+        <div class="intensity-grid">
+            <button class="intensity-btn cold" onclick="submitCheckin(-2)">🥶<br>Очень холодно</button>
+            <button class="intensity-btn cold" onclick="submitCheckin(-1)">❄️<br>Холодно</button>
+            <button class="intensity-btn ok"   onclick="submitCheckin(0)">😊<br>Нормально</button>
+            <button class="intensity-btn hot"  onclick="submitCheckin(1)">☀️<br>Тепло</button>
+            <button class="intensity-btn hot"  onclick="submitCheckin(2)">🔥<br>Очень жарко</button>
+        </div>
+        <div class="field">
+            <label>Комментарий (необязательно)</label>
+            <input type="text" id="checkin-comment" placeholder="Что надел, как ощущалось..." />
+        </div>
+        <button class="btn btn-secondary" onclick="showScreen('screen-advice')">← Назад</button>
+    </div>
+
+    <!-- Лента -->
+    <div id="screen-feed" class="card" style="display:none">
+        <h2>Отзывы</h2>
+        <div class="field">
+            <input type="text" id="feed-city" placeholder="Город" />
+        </div>
+        <button class="btn btn-primary" onclick="loadFeed()">Загрузить</button>
+        <div id="feed-list" style="margin-top:16px"></div>
+        <button class="btn btn-secondary" onclick="showScreen('screen-advice')">← Назад</button>
+    </div>
 </div>
 
 <script>
-    // Device ID
     let deviceId = localStorage.getItem('device_id');
     if (!deviceId) {
         deviceId = crypto.randomUUID();
@@ -95,7 +330,6 @@
         document.getElementById(id).style.display = 'block';
     }
 
-    // Проверяем прошёл ли онбординг
     if (localStorage.getItem('onboarding_done')) {
         showScreen('screen-advice');
     }
@@ -108,11 +342,7 @@
             rain_sensitivity: document.getElementById('rain_sensitivity').value,
             gender: null
         };
-        const res = await fetch('/onboarding', {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(data)
-        });
+        const res = await fetch('/onboarding', { method: 'POST', headers, body: JSON.stringify(data) });
         if (res.ok) {
             localStorage.setItem('onboarding_done', '1');
             showScreen('screen-advice');
@@ -124,9 +354,12 @@
     async function getAdvice() {
         const city = document.getElementById('city').value;
         if (!city) return alert('Введи город');
+        const box = document.getElementById('advice-result');
+        box.style.display = 'block';
+        box.textContent = 'Загружаю...';
         const res = await fetch(`/advice/${city}`, { method: 'POST', headers });
         const data = await res.json();
-        document.getElementById('advice-result').textContent = data.advice;
+        box.textContent = data.advice;
         document.getElementById('checkin-city').value = city;
         document.getElementById('feed-city').value = city;
     }
@@ -149,34 +382,37 @@
     }
 
     async function loadFeed() {
-    const city = document.getElementById('feed-city').value;
-    if (!city) return alert('Введи город');
-    const res = await fetch(`/feed?city=${city}`);
-    const data = await res.json();
-    const list = document.getElementById('feed-list');
+        const city = document.getElementById('feed-city').value;
+        if (!city) return alert('Введи город');
+        const res = await fetch(`/feed?city=${city}`);
+        const data = await res.json();
+        const list = document.getElementById('feed-list');
 
-    const intensityMap = {
-        '-2': 'Очень холодно',
-        '-1': 'Холодно',
-        '0': 'Нормально',
-        '1': 'Тепло',
-        '2': 'Очень жарко'
-    };
+        const labels = {
+            '-2': ['🥶 Очень холодно', 'badge-cold'],
+            '-1': ['❄️ Холодно', 'badge-cold'],
+            '0':  ['😊 Нормально', 'badge-ok'],
+            '1':  ['☀️ Тепло', 'badge-hot'],
+            '2':  ['🔥 Очень жарко', 'badge-hot'],
+        };
 
-    if (data.length === 0) {
-        list.innerHTML = '<p>Отзывов пока нет</p>';
-        return;
+        if (!data.length) {
+            list.innerHTML = '<div class="empty-state">Отзывов пока нет</div>';
+            return;
+        }
+
+        list.innerHTML = data.map(r => {
+            const [label, cls] = labels[String(r.intensity)] || [r.intensity, 'badge-ok'];
+            return `
+                <div class="feed-item">
+                    <span class="badge ${cls}">${label}</span>
+                    ${r.comment ? `<div class="comment">${r.comment}</div>` : ''}
+                    <div class="ts">${r.created_at || ''}</div>
+                </div>
+            `;
+        }).join('');
     }
-    list.innerHTML = data.map(r => `
-        <div>
-            <b>${intensityMap[r.intensity] || r.intensity}</b>
-            ${r.comment ? `<p>${r.comment}</p>` : ''}
-            <small>${r.created_at || ''}</small>
-            <hr>
-        </div>
-    `).join('');
-}
 </script>
-
 </body>
 </html>
+
